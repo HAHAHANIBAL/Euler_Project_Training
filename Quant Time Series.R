@@ -41,10 +41,10 @@ p<-p[1:(TT+1)]
 r<-diff(p)
 mu<-mean(r)
 rm<-c(1:M)*0
-gspcTail=as.ts(tail(r.xd,1000))
-gspcArma=armaFit(gspcTail~arma(5,1),data=gspcTail)
+dataTail=as.ts(tail(r.xd,1000))
+#dataArma=armaFit(dataTail~arma(5,1),data=dataTail)
 
-armaSearch=function(
+modelSearch=function(
 	series,
 	minOrder=c(0,0),
 	maxOrder=c(5,5),
@@ -61,19 +61,19 @@ armaSearch=function(
 			next
 		}
 		formula=as.formula(paste(sep="","series~arma(",p,",",q,")"))
-		fit=tryCatch(armaFit(formula,data=series),error=function(err) FALSE, warning=function(warn) FALSE)
-		if(!is.logical(fit))
+		arma=tryCatch(armaFit(formula,data=series),error=function(err) FALSE, warning=function(warn) FALSE)
+		if(!is.logical(arma))
 		{
-			fitAic=fit@fit$aic
-			if(fitAic<bestAic)
+			armaAic=arma@fit$aic
+			if(armaAic<bestAic)
 			{
-				bestAic=fitAic
-				bestFit=fit
+				bestAic=armaAic
+				bestFit=arma
 				bestModel=c(p,q)
 			}
 			if(trace)
 			{
-				message=paste(sep="","(",p,",",q,"): AIC= ", fitAic)
+				message=paste(sep="","(",p,",",q,"): AIC= ", armaAic)
 				print(message)
 			}
 		}
@@ -94,7 +94,9 @@ armaSearch=function(
 
 }
 
-gspcArma=armaFit(gspcTail~arma(Coef),data=gspcTail)
+modelSearch(dataTail)
+#dataArma=armaFit(dataTail~arma(Coef),data=dataTail)
+as.numeric(predict(dataArma,n.ahead=1,doplot=F)$pred)
 
 #Logit
 dat<-read.csv("Candidate_Integrate.csv",header=FALSE)
