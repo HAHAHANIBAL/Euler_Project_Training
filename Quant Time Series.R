@@ -99,10 +99,43 @@ modelSearch(dataTail)
 as.numeric(predict(dataArma,n.ahead=1,doplot=F)$pred)
 
 #Logit
-dat<-read.csv("Candidate_Integrate.csv",header=FALSE)
+dat<-read.csv("dat.csv",header=FALSE)
 summary(dat)
+dat$V4<-factor(dat$V4)
+dat$V5<-factor(dat$V5)
+dat$V10<-as.numeric(dat$V10)
+logitmodel<-glm(V1~V4+V5+V6+V7+V8+V9+V10+V11+V12,data=dat,family="binomial")
+confint.default(logitmodel)
+dat2014<-read.csv("dat2014.csv",header=FALSE)
+dat2014$V4<-factor(dat2014$V4)
+dat2014$V5<-factor(dat2014$V5)
+dat2014$V10<-as.numeric(dat2014$V10)
+dat_new<-cbind(dat2014[,4:12])
+dat2014$V1<-predict(logitmodel,newdata=dat_new,type="response")
+sink("congress_results_output.csv")
+cbind(dat2014[,1])
+sink()
+
+
+
 #conver numerci cols here or Excel..
 dat<-cbind(dat[,1:2],as.numeric(dat[,3]))
 
+library("e1071")
+
+dat<-read.table("ds_test_final.txt",sep="\t",header=TRUE)
+#fix(dat)
+dat<-dat[order(-dat$hicov),,drop=FALSE]
+#nrow(dat)
+train<-rbind(dat[1:272762,])
+test<-rbind(dat[272763:nrow(dat),])
+
+x<-cbind(train[,2:9],train[,11:31])
+y<-as.factor(train[,10])
+classifier<-naiveBayes(x,y)
+pred_y<-predict(classifier,x)
+table(pred_y, y, dnn=list('predicted','actual'))
 
 
+
+11 3:10 12:32
