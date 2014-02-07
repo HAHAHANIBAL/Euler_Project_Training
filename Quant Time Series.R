@@ -124,6 +124,7 @@ dat<-cbind(dat[,1:2],as.numeric(dat[,3]))
 library("e1071")
 
 dat<-read.table("ds_test_final.txt",sep="\t",header=TRUE)
+summary(dat)
 #fix(dat)
 dat<-dat[order(-dat$hicov),,drop=FALSE]
 #nrow(dat)
