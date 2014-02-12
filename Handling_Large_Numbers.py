@@ -54,4 +54,14 @@ for i in range(0,20):
 print paths
 
 #The key to solve common divisible prime factors
-print int(math.log(20)/math.log(2))
+print int(math.floor((math.log(20)/math.log(2))))
+
+#Euler #16
+digit=int(math.pow(2,1000))
+n=digit
+sum=0
+while n:
+    #sum up all digits one by one
+    sum+=n%10
+    n/=10
+print sum
