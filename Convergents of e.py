@@ -6,17 +6,17 @@
 limit=100
 result=0
 
-d=1
-n=2
+n_2=1
+n_1=2
 
 for i in range(2,limit+1):
-    temp=d
+    temp=n_2
     if i%3==0:
         c=2*(i/3)
     else:
         c=1
-    d=n
-    n=c*d+temp
+    n_2=n_1
+    n_1=c*n_2+temp
 
 
 def digitsum(n):
@@ -26,4 +26,4 @@ def digitsum(n):
         n/=10
     return sum
 
-print digitsum(n)
+print digitsum(n_1)
